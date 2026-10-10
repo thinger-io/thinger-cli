@@ -5,7 +5,7 @@
 ### Changed
 
 - Requires `@thinger-io/cli-core` 0.2.0: the MCP server goes from 48 tools to
-  25 (`thinger_resource_*` over a catalog of resource types, plus the
+  22 (`thinger_resource_*` over a catalog of resource types, plus the
   operations that are not CRUD), less than half the size in `tools/list`.
   Tool names change: `thinger_devices` → `thinger_resource_list` with
   `type: "device"`, `thinger_profiles` → `thinger_profile_list`,
