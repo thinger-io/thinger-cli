@@ -6,7 +6,7 @@ operate it with the permissions of your token.
 
 - **CLI** — devices, products, buckets and profiles from a shell, with
   `--json` output for scripts.
-- **MCP server** — `thinger mcp` serves ~50 typed `thinger_*` tools over
+- **MCP server** — `thinger mcp` serves 25 `thinger_*` tools over
   stdio.
 
 Both share the same profiles and API layer: sign in once, use either.
@@ -93,11 +93,24 @@ claude mcp add thinger -- thinger mcp
 
 Other hosts take the same command (`thinger`, args `["mcp"]`).
 
-Tools: devices (list, info, create, delete, assign product), device
-resources and properties, products and product properties, product
-profiles (API resources, buckets, property handlers), buckets, user and
-device tokens, alarm rules and instances, profiles. Every tool takes an
-optional `profile`, and most an optional `user`.
+Tools:
+
+- `thinger_resource_describe`, `_list`, `_get`, `_create`, `_update`,
+  `_delete`, `_clone` — every server resource by `type`: devices, products,
+  buckets, dashboards, endpoints, storages, asset types and groups, projects,
+  tokens, alarm rules and instances, claims, properties, and their children
+  (device properties and tokens, product profile entries…).
+  `resource_describe` shows a type's fields and examples, read from the
+  server's own API description.
+- `thinger_bucket_data_read` / `_write`, `thinger_device_resource_list` /
+  `_call`, `thinger_device_data_send`, `thinger_device_stats`,
+  `thinger_device_overview`, `thinger_product_resource_call`,
+  `thinger_product_export`, `thinger_endpoint_call`,
+  `thinger_alarm_rule_test`, `thinger_dashboard_publish`, `thinger_doc_read`, `thinger_storage_file_list` / `_read` /
+  `_write` / `_delete`, `thinger_profile_list`.
+
+Every tool takes an optional `profile`, and most an optional `user`.
+`thinger mcp --admin` also serves roles, syncs and project members.
 
 ## Shared core
 
