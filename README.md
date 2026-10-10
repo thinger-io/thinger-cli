@@ -17,7 +17,7 @@ Both share the same profiles and API layer: sign in once, use either.
 ## Installation
 
 ```bash
-npm install -g @thinger-io/cli     # once published
+npm install -g @thinger-io/thinger-cli     # once published
 # or, from source
 git clone https://github.com/thinger-io/thinger-cli.git && cd thinger-cli && npm install && npm link
 ```
