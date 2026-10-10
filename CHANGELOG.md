@@ -12,9 +12,6 @@
   `thinger_bucket_read` → `thinger_bucket_data_read`, and so on.
 - MCP instructions rewritten for the new tools.
 
-### Added
-
-- `thinger mcp --admin` (or `THINGER_MCP_ADMIN=1`).
 
 ## [0.1.1] - 2026-10-10
 

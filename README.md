@@ -110,7 +110,6 @@ Tools:
   `_write` / `_delete`, `thinger_profile_list`.
 
 Every tool takes an optional `profile`, and most an optional `user`.
-`thinger mcp --admin` also serves roles, syncs and project members.
 
 ## Shared core
 
