@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1] - 2026-10-10
+
+### Changed
+
+- Requires `@thinger-io/cli-core` 0.1.1. First release published from GitHub
+  Actions through Trusted Publishing.
+
 ## [0.1.0] - 2026-10-10
 
 First version: the `thinger` CLI, built on
