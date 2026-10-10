@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- The core moved to its own package, `@thinger-io/cli-core`.
+- Product properties: `product property-list <id>` and
+  `product property-get <id> <property>` replace `product property`, matching
+  thinr's names.
+- npm package renamed to `@thinger-io/thinger-cli`.
+
 ## [0.1.0] - 2026-10-10
 
 First version: the generic core of `thinr` (ThinRemote CLI 1.3.5), made

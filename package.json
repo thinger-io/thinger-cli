@@ -38,13 +38,7 @@
     "author": "Thinger.io",
     "license": "MIT",
     "dependencies": {
-        "@inquirer/prompts": "^8.4.1",
-        "@modelcontextprotocol/sdk": "^1.29.0",
-        "axios": "^1.10.0",
-        "chalk": "^5.4.1",
-        "commander": "^14.0.0",
-        "open": "^11.0.0",
-        "ora": "^9.3.0"
+        "@thinger-io/cli-core": "file:../cli-core"
     },
     "type": "module",
     "engines": {

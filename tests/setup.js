@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { defineIdentity } from '../lib/core/identity.js';
+import { defineIdentity } from '@thinger-io/cli-core/identity';
 import { thingerIdentity } from '../lib/identity.js';
 
 process.env.HOME = fs.mkdtempSync(path.join(os.tmpdir(), 'thinger-cli-test-'));

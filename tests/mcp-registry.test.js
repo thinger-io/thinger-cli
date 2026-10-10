@@ -1,8 +1,8 @@
 import './setup.js';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildTools, genericTools } from '../lib/core/mcp/registry.js';
-import { expandToolRefs } from '../lib/core/mcp/naming.js';
+import { buildTools, genericTools } from '@thinger-io/cli-core/mcp/registry';
+import { expandToolRefs } from '@thinger-io/cli-core/mcp/naming';
 
 const tools = buildTools();
 

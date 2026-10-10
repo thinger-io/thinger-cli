@@ -1,7 +1,7 @@
 import './setup.js';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { defineIdentity, env, identity, loginHint } from '../lib/core/identity.js';
+import { defineIdentity, env, identity, loginHint } from '@thinger-io/cli-core/identity';
 import { thingerIdentity } from '../lib/identity.js';
 
 describe('identity', () => {

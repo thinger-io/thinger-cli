@@ -72,7 +72,8 @@ thinger device resource <id> [resource] [-i key=value …]
 
 thinger product list | info <id> | delete <id>
 thinger product create <id> [--from product.json]   # { config, profile }
-thinger product property <id> [property]
+thinger product property-list <id>
+thinger product property-get <id> <property>
 thinger product property-set <id> <property> <json>
 thinger product property-delete <id> <property>
 
@@ -100,14 +101,14 @@ optional `profile`, and most an optional `user`.
 
 ## Shared core
 
-`lib/core` holds everything that is not Thinger-specific: API client,
-auth, profiles, REST helpers, the generic commands and the MCP tools. The
-CLI only supplies its identity (`lib/identity.js`): binary name, config
-folder, environment prefix, the token the password login creates, OAuth
-client and MCP tool prefix. ThinRemote's `thinr` is built on the same code
-with its own identity, so the two keep separate profiles and tool names and
-can run side by side. The plan is to publish `lib/core` as a package both
-depend on.
+Everything that is not Thinger-specific — API client, auth, profiles, REST
+helpers, the generic commands and the MCP tools — lives in
+[@thinger-io/cli-core](https://github.com/thinger-io/cli-core). This CLI only
+supplies its identity (`lib/identity.js`): binary name, config folder,
+environment prefix, the token the password login creates, OAuth client and
+MCP tool prefix. ThinRemote's `thinr` is built on the same core with its own
+identity, so the two keep separate profiles and tool names and can run side
+by side.
 
 ## Development
 
