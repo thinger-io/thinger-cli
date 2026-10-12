@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2] - 2026-10-12
+
+### Changed
+
+- First release of `@thinger-io/cli` from GitHub Actions (Trusted Publishing,
+  with provenance); 0.2.1 was published by hand to create the package.
+
 ## [0.2.1] - 2026-10-12
 
 ### Changed
