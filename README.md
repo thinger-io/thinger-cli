@@ -6,7 +6,7 @@ operate it with the permissions of your token.
 
 - **CLI** — devices, products, buckets and profiles from a shell, with
   `--json` output for scripts.
-- **MCP server** — `thinger mcp` serves 22 `thinger_*` tools over
+- **MCP server** — `thinger mcp` serves 23 `thinger_*` tools over
   stdio.
 
 Both share the same profiles and API layer: sign in once, use either.
@@ -17,7 +17,7 @@ Both share the same profiles and API layer: sign in once, use either.
 ## Installation
 
 ```bash
-npm install -g @thinger-io/thinger-cli     # once published
+npm install -g @thinger-io/cli
 # or, from source
 git clone https://github.com/thinger-io/thinger-cli.git && cd thinger-cli && npm install && npm link
 ```
@@ -88,10 +88,12 @@ Every command takes `-j, --json` and then prints `{ ok, data }` or
 
 ```bash
 claude mcp add thinger -- thinger mcp
+# without installing it: claude mcp add thinger -- npx -y @thinger-io/cli mcp
 # from source: claude mcp add thinger -- node /path/to/thinger-cli/bin/thinger.js mcp
 ```
 
-Other hosts take the same command (`thinger`, args `["mcp"]`).
+Other hosts take the same command (`thinger`, args `["mcp"]`), or
+`npx` with args `["-y", "@thinger-io/cli", "mcp"]`.
 
 Tools:
 
@@ -116,7 +118,7 @@ Every tool takes an optional `profile`, and most an optional `user`.
 
 Everything that is not Thinger-specific — API client, auth, profiles, REST
 helpers, the generic commands and the MCP tools — lives in
-[@thinger-io/cli-core](https://github.com/thinger-io/cli-core). This CLI only
+[@thinger-io/cli-core](https://github.com/thinger-io/thinger-cli-core). This CLI only
 supplies its identity (`lib/identity.js`): binary name, config folder,
 environment prefix, the token the password login creates, OAuth client and
 MCP tool prefix. ThinRemote's `thinr` is built on the same core with its own

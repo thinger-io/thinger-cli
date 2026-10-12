@@ -1,11 +1,19 @@
 # Changelog
 
+## [0.2.1] - 2026-10-12
+
+### Changed
+
+- Published as `@thinger-io/cli` (formerly `@thinger-io/thinger-cli`, now
+  deprecated). The command is still `thinger` and profiles stay in
+  `~/.config/thinger-cli`.
+
 ## [0.2.0] - 2026-10-10
 
 ### Changed
 
 - Requires `@thinger-io/cli-core` 0.2.0: the MCP server goes from 48 tools to
-  22 (`thinger_resource_*` over a catalog of resource types, plus the
+  23 (`thinger_resource_*` over a catalog of resource types, plus the
   operations that are not CRUD), less than half the size in `tools/list`.
   Tool names change: `thinger_devices` → `thinger_resource_list` with
   `type: "device"`, `thinger_profiles` → `thinger_profile_list`,
@@ -23,7 +31,7 @@
 ## [0.1.0] - 2026-10-10
 
 First version: the `thinger` CLI, built on
-[@thinger-io/cli-core](https://github.com/thinger-io/cli-core) (the generic
+[@thinger-io/cli-core](https://github.com/thinger-io/thinger-cli-core) (the generic
 core of ThinRemote's `thinr`, made independent of the product).
 
 ### Added

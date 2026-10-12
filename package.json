@@ -1,6 +1,6 @@
 {
-    "name": "@thinger-io/thinger-cli",
-    "version": "0.2.0",
+    "name": "@thinger-io/cli",
+    "version": "0.2.1",
     "description": "CLI for Thinger.io servers — devices, products, buckets — with an MCP server for AI clients",
     "main": "bin/thinger.js",
     "bin": {
