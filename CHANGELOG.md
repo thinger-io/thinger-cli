@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.3] - 2026-10-14
+
+### Changed
+
+- `@thinger-io/cli-core` 0.3.0: `thinger_resource_call` gains the
+  `alarm_instance` action `stats` (how many instances there are in each
+  state); actions check their parent and id; `resource_list` pages lists
+  answered whole from any `index`. The tools are the same 23.
+
 ## [0.2.2] - 2026-10-12
 
 ### Changed
