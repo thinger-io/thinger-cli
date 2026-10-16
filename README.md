@@ -4,9 +4,9 @@ A command-line tool for any [Thinger.io](https://thinger.io) server, and an
 MCP server that lets AI assistants (Claude Code, Claude Desktop, Cursor…)
 operate it with the permissions of your token.
 
-- **CLI** — devices, products, buckets and profiles from a shell, with
-  `--json` output for scripts.
-- **MCP server** — `thinger mcp` serves 23 `thinger_*` tools over
+- **CLI** — devices, products, buckets, dashboard apps and profiles from a
+  shell, with `--json` output for scripts.
+- **MCP server** — `thinger mcp` serves 25 `thinger_*` tools over
   stdio.
 
 Both share the same profiles and API layer: sign in once, use either.
@@ -58,6 +58,11 @@ THINGER_PROFILE=staging thinger device list
 `-u, --user <account>` addresses another account on the same server when
 your profile has admin rights.
 
+`THINGER_TOKEN` (an access token) and `THINGER_SERVER` stand for a profile
+in every command and in the MCP server, for CI: they replace the saved
+profile unless `--profile` or `THINGER_PROFILE` names one, and
+`thinger login` warns while `THINGER_TOKEN` is set.
+
 ## Commands
 
 ```bash
@@ -84,6 +89,96 @@ thinger bucket read <bucket> [-d device] [-n 10] [-m minutes] [--agg 5m --agg-ty
 Every command takes `-j, --json` and then prints `{ ok, data }` or
 `{ ok: false, error: { message, code } }`.
 
+## Dashboard apps
+
+Custom dashboards are web apps (React, Angular…) built on the dashboard SDK,
+[`@thinger-io/dashboard-sdk`](https://www.npmjs.com/package/@thinger-io/dashboard-sdk).
+Create one from a template, develop it on its own dev server against a real
+server, and publish it when it works:
+
+```bash
+thinger dashboard init greenhouse --to device:gh_01   # --template angular, --ci, --install
+cd greenhouse && npm install
+npm run dev                     # Angular: npm start. Leave it running
+thinger dashboard dev --open    # in another terminal
+npm run build && thinger dashboard publish
+```
+
+`dashboard init` copies a template of the SDK package (`react` by default,
+`angular`) from its latest release on npm (offline, the copy the CLI
+installs; `--from` takes another version or tag, or a folder or .tgz of it) into a new
+folder, with the SDK as a dependency, a `thinger.json` for the commands
+below (storage `app_<folder>_<random>` unless `--storage`), and an `AGENTS.md`
+(with a `CLAUDE.md` pointing at it) with the rules of the console's frame
+for the agents that work on it. `--ci` adds a GitHub workflow that
+publishes it.
+
+`dashboard dev` prints (or opens) a link to your local app that runs it as a
+standalone page against the server, in the context you pick (`--device`,
+`--product`, `--asset-type`, `--asset-group`, `--project`, or
+`--to device:<id>`; by default the first destination in `thinger.json`):
+the SDK calls the server directly with a temporary token with full access
+to your account (to the project with `--project`; 8 h, `--hours`; the next
+link for the same project replaces it), so writes are real. The url must
+be on this machine (localhost) unless you pass `--allow-remote`: the link
+carries that token. Your dev server
+keeps reloading the app and the browser's tools show its errors. The app
+bundles the dashboard SDK, so its dev server needs no proxy, and the SDK
+takes the server from the link.
+
+Outside the console's sandboxed iframe, localStorage, cookies and a `<base>`
+tag work: don't rely on them, they fail once published.
+
+`dashboard publish` uploads the build folder to a public storage and points
+the destinations at it (`dashboard:<id>`, `device:<id>`, `product:<id>`,
+`asset_type:<id>`, `asset_group:<id>`, `project:<id>`; repeat `--to` for
+several). `--preview` adds standalone review links with a read-only token.
+Both commands warn when the app's SDK needs a newer server than the
+profile's, when a newer SDK is on npm, or when the page loads the
+deprecated script build (`thinger-dashboard.js`).
+
+A `thinger.json` next to the app keeps the settings of these commands, so
+they run without arguments (`dev.context` defaults to the first
+destination's; `dev.route` and `dev.hours` are optional too):
+
+```json
+{
+    "dashboard": {
+        "dir": "dist",
+        "storage": "app_greenhouse",
+        "prune": true,
+        "to": [{ "type": "device", "id": "gh_01", "route": "/" }],
+        "dev": { "url": "http://localhost:5173/" }
+    }
+}
+```
+
+To publish from CI, set the repository variable `THINGER_SERVER` and the
+secret `THINGER_TOKEN` (an access token allowed to write storages and
+dashboards, or the resources' `dashboard` property); `dashboard init --ci`
+writes this workflow:
+
+```yaml
+# .github/workflows/dashboard.yml
+name: Publish dashboard
+on:
+    push:
+        branches: [main]
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - run: npm ci && npm run build
+            - run: npx -y @thinger-io/cli dashboard publish
+              env:
+                  THINGER_SERVER: ${{ vars.THINGER_SERVER }}
+                  THINGER_TOKEN: ${{ secrets.THINGER_TOKEN }}
+```
+
 ## MCP server
 
 ```bash
@@ -108,9 +203,12 @@ Tools:
   actions, read from the server's own API description.
 - `thinger_bucket_data_read` / `_write`, `thinger_device_resource_list` /
   `_call`, `thinger_device_data_send`, `thinger_device_overview`,
-  `thinger_product_resource_call`, `thinger_storage_file_list` / `_read` /
-  `_write` / `_delete`, `thinger_dashboard_publish`, `thinger_doc_read`,
-  `thinger_profile_list`.
+  `thinger_product_resource_call`, `thinger_plugin_call`,
+  `thinger_storage_file_list` / `_read` / `_write` / `_delete`,
+  `thinger_dashboard_init` / `_dev` / `_publish`, `thinger_doc_read`,
+  `thinger_profile_list`. `thinger_dashboard_dev` gives an agent the dev
+  link above: with browser tools it opens the app, reads its console and
+  iterates, then publishes it once.
 
 Every tool takes an optional `profile`, and most an optional `user`.
 

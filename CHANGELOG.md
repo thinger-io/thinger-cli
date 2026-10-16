@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.3.0] - 2026-10-16
+
+### Added
+
+- `thinger dashboard dev [url]`: develop a dashboard app on its own dev
+  server (ng serve, Vite…) against a real server: a link with a temporary
+  token opens the local app as a standalone page whose SDK calls the server
+  directly.
+- `thinger dashboard publish [dir]`: upload the build to a public storage
+  and point dashboards at it (`--to`, repeatable; `--prune`, `--bump`,
+  `--preview`, `--no-point`). Both read their settings from `thinger.json`.
+- `thinger dashboard init <dir>`: a new dashboard app from a template of
+  `@thinger-io/dashboard-sdk` (React or Angular, TypeScript), with its
+  `thinger.json` and an `AGENTS.md`; `--ci` adds a GitHub workflow.
+- Publish and dev warn when the app's SDK needs a newer server, a newer SDK
+  is on npm, or a page loads the deprecated script build.
+- MCP tools `thinger_dashboard_init` and `thinger_dashboard_dev` (25
+  tools): the same for agents, which open the dev link with their browser
+  tools.
+- `THINGER_TOKEN` (an access token) and `THINGER_SERVER` replace the saved
+  profile in every command and the MCP server (CI), unless `--profile` or
+  `THINGER_PROFILE` names one; `thinger login` warns while `THINGER_TOKEN`
+  is set.
+
+### Changed
+
+- Requires `@thinger-io/cli-core` 0.4.0.
+- The guides for agents (`thinger_doc_read`: concepts, product code, server
+  administration, the dashboard SDK reference and types) ship with the CLI
+  and the SDK package instead of coming from the server, which stops
+  serving `/sdk/`. Same ids; what needs a newer server says "since Thinger
+  X".
+- Preview links no longer come with a layout check link: the server
+  retires `/sdk/preview.html`.
+
 ## [0.2.3] - 2026-10-14
 
 ### Changed
