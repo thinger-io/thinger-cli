@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.4.0] - 2026-10-21
+
+### Added
+
+- A command for every resource type the MCP server reaches, generated from
+  the same catalog: `thinger <type> list|get|create|update|delete|clone|
+  describe` and the type's actions (`thinger endpoint call`, `thinger
+  alarm-rule test-rule`, `thinger admin host restart`…), with bodies from
+  `--from` and `-s key=value`. Endpoints, tokens, alarms, storages,
+  projects, assets, syncs, claims, plugins, product profiles, properties
+  and the server administration are now reachable from the command line
+  and from CI.
+- `thinger api <path>`: any request to the server, as `gh api` does.
+- `thinger bucket write|export`, `thinger storage files|upload|download|rm`,
+  `thinger device send|overview`, `thinger product resource|apply` and
+  `thinger plugin call`. `product export` and `product apply` keep a
+  product in a repository and deploy it.
+
+### Changed
+
+- Requires `@thinger-io/cli-core` 0.5.0.
+
+### Fixed
+
+- Tokens created with an expiry such as "30d" (`thinger_resource_create`)
+  were refused by the server: it takes milliseconds.
+
 ## [0.3.0] - 2026-10-16
 
 ### Added

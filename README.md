@@ -84,6 +84,55 @@ thinger product property-delete <id> <property>
 
 thinger bucket list
 thinger bucket read <bucket> [-d device] [-n 10] [-m minutes] [--agg 5m --agg-type mean]
+thinger bucket write <bucket> --from samples.ndjson     # or -s temperature=21.5
+thinger bucket export <bucket> -o data.csv [--format csv|json|arff]
+
+thinger product export <id> -o product.json
+thinger product apply product.json             # create or update: profile, properties
+thinger product resource <id> <resource> [--from payload.json]
+
+thinger storage files <storage> [folder]
+thinger storage upload <storage> ./dist [--to web]
+thinger storage download <storage> <path> [-o file]
+thinger storage rm <storage> <path> [-y]
+
+thinger device send <id> -s temperature=21.5     # as an HTTP device
+thinger plugin call <plugin> [path] [-X post] [--from body.json]
+```
+
+Every resource type the MCP server reaches has its own command, generated
+from the same catalog, with the verbs it supports and its actions:
+
+```bash
+thinger <type> list [parents…] [--search text] [--filter key=value] [--count n]
+thinger <type> get [parents…] <id> [-o file]
+thinger <type> create [parents…] [id] [--from file.json] [-s key=value …]
+thinger <type> update [parents…] <id> [--from file.json] [-s key=value …] [--merge]
+thinger <type> delete [parents…] <id> [-y]
+thinger <type> clone [parents…] <id> <new-id>
+thinger <type> describe                        # fields and examples, from the server
+thinger <type> <action> [parents…] [id] [--from file.json] [-q key=value]
+
+thinger endpoint call notify -s message=hello
+thinger token create ci -s name=CI -s expire='"30d"' -s 'allow={"Device":{"*":"*"}}'
+thinger alarm-rule test-rule overheat
+thinger device-property update boiler setpoint -s value.target=21 --merge
+thinger product-profile-bucket create boiler telemetry --from bucket.json
+thinger admin host restart <host>              # server types, for admins
+```
+
+Types are named in kebab case (`asset-type`, `alarm-instance`,
+`product-profile-api`…); child types take their parent's ids first.
+`-s` values are parsed as JSON when they are (`21`, `true`, `{"a":1}`;
+quote strings that look like numbers: `-s code='"007"'`) and dots nest
+(`-s data.source=resource`).
+
+Anything else the API offers, with `thinger api` (`{user}` is the account):
+
+```bash
+thinger api /v1/users/{user}/products/boiler/firmwares
+thinger api -X PUT /v1/users/{user}/devices/sensor1 -f enabled=false
+thinger api /v2/users/{user}/storages/web/files/logo.png -o logo.png
 ```
 
 Every command takes `-j, --json` and then prints `{ ok, data }` or
