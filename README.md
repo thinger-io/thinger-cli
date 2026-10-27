@@ -65,64 +65,76 @@ profile unless `--profile` or `THINGER_PROFILE` names one, and
 
 ## Commands
 
-```bash
-thinger device list [pattern]                  # regex on id/name
-thinger device info <id>
-thinger device create <id> [-t Generic|MQTT|HTTP|Virtual|Subdevice] [-p product]
-thinger device delete <id> [-y]
-thinger device set-product <id> <product>
-thinger device property <id> [property] [-f dot.path]
-thinger device property-set <id> <property> <json>
-thinger device resource <id> [resource] [-i key=value …]
+Every command reads the same way: nouns, then a verb, then the ids,
+outermost first.
 
-thinger product list | info <id> | delete <id>
-thinger product create <id> [--from product.json]   # { config, profile }
-thinger product property-list <id>
-thinger product property-get <id> <property>
-thinger product property-set <id> <property> <json>
-thinger product property-delete <id> <property>
+```
+thinger <noun> [<noun>…] <verb> [<parent ids>…] [<id>] [options]
+```
+
+```bash
+thinger device list [--search sensor] [--filter product=meteo]
+thinger device get <device> [-f connection.active]
+thinger device create <device> [-t Generic|MQTT|HTTP|Virtual|Subdevice] [-p product] [-n name]
+thinger device update <device> [-n name] [-s key=value …] [--from device.json]
+thinger device delete <device> [-y]
+thinger device set-product <device> <product>
+thinger device property list <device>
+thinger device property get <device> <property> [-f value.setpoint]
+thinger device property set <device> <property> <json>
+thinger device resource list <device>
+thinger device resource call <device> <resource> [-s key=value …] [-f field]
+thinger device send <device> -s temperature=21.5     # as an HTTP device
+thinger device bucket tag list <device> <bucket>
+
+thinger product list | get <product> | delete <product>
+thinger product create <product> [--from product.json]   # { config, profile }
+thinger product property list|get|set|delete <product> [property] [value]
+thinger product profile api list <product>
+thinger product profile bucket create <product> <bucket> --from bucket.json
+thinger product profile api call <product> <api> [--from payload.json]
+thinger product export <product> -o product.json
+thinger product apply --from product.json      # create or update: profile, properties
 
 thinger bucket list
 thinger bucket read <bucket> [-d device] [-n 10] [-m minutes] [--agg 5m --agg-type mean]
 thinger bucket write <bucket> --from samples.ndjson     # or -s temperature=21.5
 thinger bucket export <bucket> -o data.csv [--format csv|json|arff]
+thinger bucket export-file list <bucket>
 
-thinger product export <id> -o product.json
-thinger product apply product.json             # create or update: profile, properties
-thinger product resource <id> <resource> [--from payload.json]
+thinger storage file list <storage> [folder]
+thinger storage file upload <storage> ./dist [--to web]
+thinger storage file download <storage> <path> [-o file]
+thinger storage file delete <storage> <path> [-y]
 
-thinger storage files <storage> [folder]
-thinger storage upload <storage> ./dist [--to web]
-thinger storage download <storage> <path> [-o file]
-thinger storage rm <storage> <path> [-y]
-
-thinger device send <id> -s temperature=21.5     # as an HTTP device
 thinger plugin call <plugin> [path] [-X post] [--from body.json]
 ```
 
-Every resource type the MCP server reaches has its own command, generated
-from the same catalog, with the verbs it supports and its actions:
+Every resource type the MCP server reaches has its commands, generated from
+the same catalog, with the verbs it supports and its actions. Child types
+nest under their parent (`device property`, `device bucket tag`,
+`product profile api`, `project member`, `sync lock`) and server types go
+under `admin`:
 
 ```bash
-thinger <type> list [parents…] [--search text] [--filter key=value] [--count n]
-thinger <type> get [parents…] <id> [-o file]
-thinger <type> create [parents…] [id] [--from file.json] [-s key=value …]
-thinger <type> update [parents…] <id> [--from file.json] [-s key=value …] [--merge]
-thinger <type> delete [parents…] <id> [-y]
-thinger <type> clone [parents…] <id> <new-id>
-thinger <type> describe                        # fields and examples, from the server
-thinger <type> <action> [parents…] [id] [--from file.json] [-q key=value]
+thinger <noun…> list [parents…] [--search text] [--filter key=value] [--count n]
+thinger <noun…> get [parents…] <id> [-f dot.path] [-o file]
+thinger <noun…> create [parents…] [id] [-n name] [-d text] [--from file.json] [-s key=value …]
+thinger <noun…> update [parents…] <id> [--from file.json] [-s key=value …] [--merge]
+thinger <noun…> delete [parents…] <id> [-y]
+thinger <noun…> clone [parents…] <id> <new-id>
+thinger <noun…> set [parents…] <property> <json>   # properties only
+thinger <noun…> describe                          # fields and examples, from the server
+thinger <noun…> <action> [parents…] [id] [--from file.json] [-q key=value]
 
 thinger endpoint call notify -s message=hello
-thinger token create ci -s name=CI -s expire='"30d"' -s 'allow={"Device":{"*":"*"}}'
-thinger alarm-rule test-rule overheat
-thinger device-property update boiler setpoint -s value.target=21 --merge
-thinger product-profile-bucket create boiler telemetry --from bucket.json
-thinger admin host restart <host>              # server types, for admins
+thinger token create ci -n CI -s expire='"30d"' -s 'allow={"Device":{"*":"*"}}'
+thinger alarm-rule test overheat
+thinger device property update boiler setpoint -s value.target=21 --merge
+thinger asset-type property set boiler max_temp 90
+thinger admin host get-settings <host>              # server types, for admins
 ```
 
-Types are named in kebab case (`asset-type`, `alarm-instance`,
-`product-profile-api`…); child types take their parent's ids first.
 `-s` values are parsed as JSON when they are (`21`, `true`, `{"a":1}`;
 quote strings that look like numbers: `-s code='"007"'`) and dots nest
 (`-s data.source=resource`).
@@ -131,7 +143,7 @@ Anything else the API offers, with `thinger api` (`{user}` is the account):
 
 ```bash
 thinger api /v1/users/{user}/products/boiler/firmwares
-thinger api -X PUT /v1/users/{user}/devices/sensor1 -f enabled=false
+thinger api -X PUT /v1/users/{user}/devices/sensor1 -s enabled=false
 thinger api /v2/users/{user}/storages/web/files/logo.png -o logo.png
 ```
 

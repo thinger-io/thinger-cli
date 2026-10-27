@@ -2,24 +2,63 @@
 
 ## [0.4.0] - 2026-10-21
 
+Every command follows one grammar, noun first:
+`thinger <noun> [<noun>…] <verb> [<parent ids>…] [<id>] [options]`.
+Nouns nest under their parent (`device property`, `product profile api`),
+ids are positional and named after their noun, and the options keep one
+meaning everywhere (`-j` JSON, `-s` a body field, `-f` one field of the
+answer, `-o` a file, `-y` no questions). A few commands of 0.3 change
+form: see the table below. The old forms are gone, not aliased.
+
 ### Added
 
-- A command for every resource type the MCP server reaches, generated from
-  the same catalog: `thinger <type> list|get|create|update|delete|clone|
-  describe` and the type's actions (`thinger endpoint call`, `thinger
-  alarm-rule test-rule`, `thinger admin host restart`…), with bodies from
-  `--from` and `-s key=value`. Endpoints, tokens, alarms, storages,
-  projects, assets, syncs, claims, plugins, product profiles, properties
-  and the server administration are now reachable from the command line
-  and from CI.
+- Commands for every resource type the MCP server reaches, generated from
+  the same catalog: `list|get|create|update|delete|clone|describe` and the
+  type's actions (`thinger endpoint call`, `thinger alarm-rule test`,
+  `thinger admin host restart`…), with bodies from `--from` and
+  `-s key=value`, `-n`/`-d` for the name and description, and
+  `set <property> <value>` on every kind of property. Endpoints, tokens,
+  alarms, storages, projects, assets, syncs, claims, plugins, product
+  profiles, properties and the server administration are now reachable from
+  the command line and from CI.
 - `thinger api <path>`: any request to the server, as `gh api` does.
-- `thinger bucket write|export`, `thinger storage files|upload|download|rm`,
-  `thinger device send|overview`, `thinger product resource|apply` and
+- Commands over the operations that are not CRUD:
+  `thinger bucket write|export`,
+  `thinger storage file list|upload|download|delete`,
+  `thinger device send|overview`, `thinger device resource list|call`,
+  `thinger product apply --from`, `thinger product profile api call` and
   `thinger plugin call`. `product export` and `product apply` keep a
   product in a repository and deploy it.
+- `device list`, `product list` and `bucket list` take `--search`,
+  `--filter`, `--count` and `--index`; `device create` and `product create`
+  take `--from`, `-s` and `--projects`; `get` takes `-f <dot.path>`.
 
-### Changed
+### Changed (breaking)
 
+| 0.3                                              | 0.4                                                         |
+| ------------------------------------------------ | ----------------------------------------------------------- |
+| `thinger device list <pattern>`                  | `thinger device list --search <text>`                       |
+| `thinger device info <device>`                   | `thinger device get <device>`                               |
+| `thinger device property <device>`               | `thinger device property list <device>`                     |
+| `thinger device property <device> <prop>`        | `thinger device property get <device> <property>`           |
+| `thinger device property-set <device> <p> <v>`   | `thinger device property set <device> <property> <value>`   |
+| `thinger device resource <device>`               | `thinger device resource list <device>`                     |
+| `thinger device resource <device> <r> -i k=v`    | `thinger device resource call <device> <resource> -s k=v`   |
+| `thinger product info <product>`                 | `thinger product get <product>`                             |
+| `thinger product property-list <product>`        | `thinger product property list <product>`                   |
+| `thinger product property-get <product> <p>`     | `thinger product property get <product> <property>`         |
+| `thinger product property-set <product> <p> <v>` | `thinger product property set <product> <property> <value>` |
+| `thinger product property-delete <product> <p>`  | `thinger product property delete <product> <property> -y`   |
+
+- `device property get` and `product property get` print the property
+  record, with its value under `value`: `-f` paths start there
+  (`-f value.setpoint` where 0.3 took `-f setpoint`). `device property list`
+  and `product property list` print the records (`-j`: the records, not
+  `{ product, properties: [names] }`). `product property delete` asks
+  unless `-y`. `device resource call` takes its input from `--from` and
+  `-s` (`-i` is gone); `-s` values are parsed as JSON, as before.
+- The root help groups the commands as Resources, Administration,
+  Configuration and Integration.
 - Requires `@thinger-io/cli-core` 0.5.0.
 
 ### Fixed
