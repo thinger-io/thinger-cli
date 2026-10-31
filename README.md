@@ -27,7 +27,7 @@ Requires Node.js 20 or newer.
 ## Signing in
 
 ```bash
-thinger login                       # interactive: username/password, token or OAuth
+thinger login                       # interactive: OAuth (browser), username/password or token
 thinger login --server acme.aws.thinger.io --username alice --token <API token>
 ```
 
@@ -35,8 +35,9 @@ thinger login --server acme.aws.thinger.io --username alice --token <API token>
   _Thinger CLI_ (id `thinger_cli`) on your account and stores it. `thinger
 logout` revokes it.
 - **Token** — paste an existing API token; it is validated and stored as is.
-- **OAuth** — browser device flow. Needs an OAuth client registered on the
-  server (`--client-id`); Thinger servers ship none by default yet.
+- **OAuth** — browser device flow, offered first. It uses the _Thinger CLI_
+  OAuth client that Thinger 7.5.0 and later create on every install; on an
+  older server the login says so and offers the other two ways.
 
 The server is a host (`acme.aws.thinger.io`, HTTPS) or a full URL for plain
 HTTP or custom ports (`http://localhost:8080`). Self-signed certificates are

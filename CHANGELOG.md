@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.1] - 2026-10-31
+
+### Changed
+
+- `thinger login` offers the browser login (OAuth device flow) first, with
+  the _Thinger CLI_ OAuth client that Thinger 7.5.0 and later create on
+  every install. On an older server it says the client is missing and
+  offers username and password or a token.
+
+### Fixed
+
+- From `@thinger-io/cli-core` 0.5.1: `admin host update-settings` is
+  described as the merge the server does, and its confirmation shows what
+  changes and what a `null` removes.
+- Requires `@thinger-io/cli-core` 0.5.1.
+
 ## [0.5.0] - 2026-10-31
 
 Every command follows one grammar, noun first:
