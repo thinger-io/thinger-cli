@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.0] - 2026-10-21
+## [0.5.0] - 2026-10-31
 
 Every command follows one grammar, noun first:
 `thinger <noun> [<noun>…] <verb> [<parent ids>…] [<id>] [options]`.
@@ -97,7 +97,9 @@ second table below.
 | `thinger_profile_list`                           | `thinger_resource_list type "profile"`                                                    |
 | `thinger_dashboard_init` / `_dev` / `_publish`   | `thinger_resource_call type "dashboard" action "init"` / `"dev"` / `"publish"`            |
 
-- Requires `@thinger-io/cli-core` 0.5.0.
+- Requires `@thinger-io/cli-core` 0.5.0. From this release the CLI's minor
+  version follows the core's (0.5.x runs on cli-core 0.5.x), so there is no
+  0.4.0.
 
 
 ### Fixed
