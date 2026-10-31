@@ -10,6 +10,11 @@ meaning everywhere (`-j` JSON, `-s` a body field, `-f` one field of the
 answer, `-o` a file, `-y` no questions). A few commands of 0.3 change
 form: see the table below. The old forms are gone, not aliased.
 
+The MCP server serves eight tools instead of 25: `thinger_resource_*`
+reach everything by `type`, and records are addressed with `ids`. The old
+tool names and the `parent`/`id` arguments are gone, not aliased: see the
+second table below.
+
 ### Added
 
 - Commands for every resource type the MCP server reaches, generated from
@@ -32,6 +37,14 @@ form: see the table below. The old forms are gone, not aliased.
 - `device list`, `product list` and `bucket list` take `--search`,
   `--filter`, `--count` and `--index`; `device create` and `product create`
   take `--from`, `-s` and `--projects`; `get` takes `-f <dot.path>`.
+- `thinger doc list` and `thinger doc get <doc>`: the guides for agents
+  from the command line.
+- MCP: `resource_describe` shows each type's ids, actions, the permission
+  each operation needs and ready-to-send examples; actions that change a
+  lot at once (`replace_all`, a host's settings or restart, removing a
+  plugin) answer a plan and run with `confirm: true` (or ask through the
+  client when it supports it); `thinger mcp --read-only` (or
+  `THINGER_MCP_READ_ONLY=1`) serves only what reads.
 
 ### Changed (breaking)
 
@@ -59,7 +72,33 @@ form: see the table below. The old forms are gone, not aliased.
   `-s` (`-i` is gone); `-s` values are parsed as JSON, as before.
 - The root help groups the commands as Resources, Administration,
   Configuration and Integration.
+- The MCP tools (the commands keep their forms and `-j` outputs; the help
+  names some positionals as the server does: `asset type get <type>`,
+  `asset group get <group>`, `alarm rule get <rule>`,
+  `alarm instance get <instance>`,
+  `product profile <category> get <product> <resource>`):
+
+| 0.3 tool                                         | 0.4 call                                                                                  |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `thinger_resource_* parent "d1" id "p1"`         | `thinger_resource_* ids {"device": "d1", "property": "p1"}`                               |
+| `thinger_bucket_data_read`                       | `thinger_resource_list type "bucket_data" ids {bucket}` (`filter` for the query)          |
+| `thinger_bucket_data_write`                      | `thinger_resource_create type "bucket_data" ids {bucket} body <samples>`                  |
+| `thinger_storage_file_list`                      | `thinger_resource_list type "storage_file" ids {storage} filter {path}`                   |
+| `thinger_storage_file_read`                      | `thinger_resource_get type "storage_file" ids {storage, file}`                            |
+| `thinger_storage_file_write`                     | `thinger_resource_create type "storage_file" ids {storage, file} body {content or local}` |
+| `thinger_storage_file_delete`                    | `thinger_resource_delete type "storage_file" ids {storage, file}`                         |
+| `thinger_device_resource_list`                   | `thinger_resource_list type "device_resource" ids {device}`                               |
+| `thinger_device_resource_call`                   | `thinger_resource_call type "device_resource" action "call" ids {device, resource}`       |
+| `thinger_device_data_send`                       | `thinger_resource_call type "device" action "send" ids {device} body <data>`              |
+| `thinger_device_overview`                        | `thinger_resource_call type "device" action "overview"`                                   |
+| `thinger_product_resource_call`                  | `thinger_resource_call type "product_profile_api" action "call" ids {product, resource}`  |
+| `thinger_plugin_call`                            | `thinger_resource_call type "plugin" action "call" ids {plugin} body {path, method}`      |
+| `thinger_doc_read`                               | `thinger_resource_get type "doc" ids {doc}` (`thinger_resource_list type "doc"` lists)    |
+| `thinger_profile_list`                           | `thinger_resource_list type "profile"`                                                    |
+| `thinger_dashboard_init` / `_dev` / `_publish`   | `thinger_resource_call type "dashboard" action "init"` / `"dev"` / `"publish"`            |
+
 - Requires `@thinger-io/cli-core` 0.5.0.
+
 
 ### Fixed
 

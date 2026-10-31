@@ -6,8 +6,8 @@ operate it with the permissions of your token.
 
 - **CLI** — devices, products, buckets, dashboard apps and profiles from a
   shell, with `--json` output for scripts.
-- **MCP server** — `thinger mcp` serves 25 `thinger_*` tools over
-  stdio.
+- **MCP server** — `thinger mcp` serves eight `thinger_resource_*` tools
+  over stdio.
 
 Both share the same profiles and API layer: sign in once, use either.
 
@@ -92,7 +92,7 @@ thinger product create <product> [--from product.json]   # { config, profile }
 thinger product property list|get|set|delete <product> [property] [value]
 thinger product profile api list <product>
 thinger product profile bucket create <product> <bucket> --from bucket.json
-thinger product profile api call <product> <api> [--from payload.json]
+thinger product profile api call <product> <resource> [--from payload.json]
 thinger product export <product> -o product.json
 thinger product apply --from product.json      # create or update: profile, properties
 
@@ -251,27 +251,36 @@ claude mcp add thinger -- thinger mcp
 Other hosts take the same command (`thinger`, args `["mcp"]`), or
 `npx` with args `["-y", "@thinger-io/cli", "mcp"]`.
 
-Tools:
+Tools: `thinger_resource_describe`, `_list`, `_get`, `_create`,
+`_update`, `_delete`, `_clone` and `_call` (actions). Each takes a `type`
+and the record's `ids`, one key per level (`{"device": "d1"}`,
+`{"device": "d1", "property": "setpoint"}`,
+`{"product": "p1", "resource": "temp"}`):
 
-- `thinger_resource_describe`, `_list`, `_get`, `_create`, `_update`,
-  `_delete`, `_clone`, `_call` — every server resource by `type`: devices,
-  products, buckets, dashboards, endpoints, storages, asset types and
-  groups, projects and their members, tokens, alarms, claims, properties,
-  their children, and the server's administration (users, hosts, domains,
-  brands, OAuth clients, identity providers, proxies). `resource_call` runs
-  actions such as verifying a domain, calling an endpoint or testing an
-  alarm rule. `resource_describe` shows a type's fields, examples and
-  actions, read from the server's own API description.
-- `thinger_bucket_data_read` / `_write`, `thinger_device_resource_list` /
-  `_call`, `thinger_device_data_send`, `thinger_device_overview`,
-  `thinger_product_resource_call`, `thinger_plugin_call`,
-  `thinger_storage_file_list` / `_read` / `_write` / `_delete`,
-  `thinger_dashboard_init` / `_dev` / `_publish`, `thinger_doc_read`,
-  `thinger_profile_list`. `thinger_dashboard_dev` gives an agent the dev
-  link above: with browser tools it opens the app, reads its console and
-  iterates, then publishes it once.
+- The server's resources: devices, products, buckets, dashboards,
+  endpoints, storages, asset types and groups, projects and their members,
+  tokens, alarms, claims, plugins, properties, their children, and the
+  server's administration (users, hosts, domains, brands, OAuth clients,
+  identity providers, proxies). `resource_call` runs their actions, such as
+  verifying a domain, calling an endpoint or testing an alarm rule.
+- Data and files: `bucket_data` (list reads a bucket, create writes
+  samples), `storage_file` (a storage's files; uploads folders of this
+  machine), `device_resource` (a connected device's resources: list, and
+  the `call` action); actions `device` `send` and `overview`,
+  `product_profile_api` `call` and `plugin` `call`.
+- `doc` (the guides for agents), `profile` (the configured servers) and the
+  `dashboard` actions `init`, `dev` and `publish`. `dev` gives an agent the
+  dev link above: with browser tools it opens the app, reads its console
+  and iterates, then publishes it once.
 
+`resource_describe` lists the types with their ids and examples; with a
+type it shows its fields, filter, actions, the permission each operation
+needs and ready-to-send calls, read from the server's own API description.
+Actions that change a lot at once (`replace_all`, a host's settings or
+restart, removing a plugin) answer a plan and run with `confirm: true`.
 Every tool takes an optional `profile`, and most an optional `user`.
+`thinger mcp --read-only` (or `THINGER_MCP_READ_ONLY=1`) serves only what
+reads: describe, list, get and the actions that change nothing.
 
 ## Shared core
 
