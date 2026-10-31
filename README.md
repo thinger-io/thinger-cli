@@ -129,9 +129,9 @@ thinger <noun…> <action> [parents…] [id] [--from file.json] [-q key=value]
 
 thinger endpoint call notify -s message=hello
 thinger token create ci -n CI -s expire='"30d"' -s 'allow={"Device":{"*":"*"}}'
-thinger alarm-rule test overheat
+thinger alarm rule test overheat
 thinger device property update boiler setpoint -s value.target=21 --merge
-thinger asset-type property set boiler max_temp 90
+thinger asset type property set boiler max_temp 90
 thinger admin host get-settings <host>              # server types, for admins
 ```
 

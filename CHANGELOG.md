@@ -14,7 +14,7 @@ form: see the table below. The old forms are gone, not aliased.
 
 - Commands for every resource type the MCP server reaches, generated from
   the same catalog: `list|get|create|update|delete|clone|describe` and the
-  type's actions (`thinger endpoint call`, `thinger alarm-rule test`,
+  type's actions (`thinger endpoint call`, `thinger alarm rule test`,
   `thinger admin host restart`…), with bodies from `--from` and
   `-s key=value`, `-n`/`-d` for the name and description, and
   `set <property> <value>` on every kind of property. Endpoints, tokens,
