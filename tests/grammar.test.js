@@ -66,6 +66,22 @@ describe('thinger command grammar', () => {
         assert.deepEqual(JSON.parse(update[0].data), { x: 1, name: 'Boiler' });
     });
 
+    it('reads the guides with doc list and doc get', async () => {
+        const log = console.log;
+        const printed = async (argv) => {
+            const out = [];
+            console.log = (line) => out.push(String(line));
+            try {
+                await throwing(build()).parseAsync(['node', 'thinger', ...argv]);
+            } finally {
+                console.log = log;
+            }
+            return out.join('\n');
+        };
+        assert.match(await printed(['doc', 'list']), /concepts/);
+        assert.match(await printed(['doc', 'get', 'concepts']), /bucket/i);
+    });
+
     it('no longer knows the 0.3 forms', async () => {
         const err = process.stderr.write;
         // @ts-ignore -- commander's error line
