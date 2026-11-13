@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.2] - 2026-11-13
+
+### Added
+
+- From `@thinger-io/cli-core` 0.5.3: profiles that act as another account
+  with the session of an admin profile (`thinger profile add <name>
+  --credentials-from <admin profile> --impersonate <user> -d "…"`), which
+  only reach that account; profile descriptions (`-d`, `profile update`),
+  shown in `profile list` and the MCP profile list.
+
+### Fixed
+
+- From `@thinger-io/cli-core` 0.5.3: a renewal of the session no longer
+  loses it when several processes renew at once, the process exits or gets
+  a signal meanwhile, or the default profile changes; a cancelled login
+  leaves the profile as it was.
+- The MCP instructions ask to read a profile's description before using
+  one other than the default.
+- Requires `@thinger-io/cli-core` 0.5.3.
+
 ## [0.5.1] - 2026-10-31
 
 ### Changed

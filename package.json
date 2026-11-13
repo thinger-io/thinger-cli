@@ -1,6 +1,6 @@
 {
     "name": "@thinger-io/cli",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "CLI for Thinger.io servers — devices, products, buckets, dashboard apps — with an MCP server for AI clients",
     "main": "bin/thinger.js",
     "bin": {
@@ -38,7 +38,7 @@
     "author": "Thinger.io",
     "license": "MIT",
     "dependencies": {
-        "@thinger-io/cli-core": "^0.5.1"
+        "@thinger-io/cli-core": "^0.5.3"
     },
     "type": "module",
     "engines": {
